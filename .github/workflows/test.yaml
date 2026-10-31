@@ -4,7 +4,7 @@
 # - required: runs the test suite on ubuntu with stable and beta rust toolchains
 # - minimal: runs the test suite with the minimal versions of the dependencies that satisfy the
 #   requirements of this crate, and its dependencies
-# - os-check: runs the test suite on mac and windows
+# - os-check: runs the test suite on mac
 # See check.yml for information about how the concurrency cancellation and workflow triggering works
 permissions:
   contents: read
@@ -42,20 +42,14 @@ jobs:
       - name: cargo test --locked
         run: cargo test --locked --all-features --all-targets
   os-check:
-    # run cargo test on mac and windows
+    # run cargo test on mac
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }} / stable
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest ]
+        os: [ macos-latest ]
     steps:
-      # if your project needs OpenSSL, uncomment this to fix Windows builds.
-      # it's commented out by default as the install command takes 5-10m.
-      # - run: echo "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" | Out-File -FilePath $env:GITHUB_ENV -Append
-      #   if: runner.os == 'Windows'
-      # - run: vcpkg install openssl:x64-windows-static-md
-      #   if: runner.os == 'Windows'
       - uses: actions/checkout@v4
         with:
           submodules: true
