@@ -72,7 +72,7 @@ A common use is running over a folder of fastqs (will only show failing FASTQs):
 # single files
 for f in fastq_files/*.fastq.gz; do amro single --quiet "$f" || echo "FAILED: $f"; done
 ## or paired matching _R1 and _R2
-for r1 in *_R1*; do amro paired --quiet "$r1" "${r1/_R1/_R2}" || echo "FAILED: $r1"; done
+for r1 in *_R1*; do r2="${r1/_R1/_R2}"; amro paired --quiet "$r1" "$r2" || echo "FAILED: $r1 $r2"; done
 ```
 
 FASTQ input can be plain text or gzip compressed.
@@ -180,7 +180,7 @@ Options:
 
 ## Example
 
-```bash
+```
 amro single my.fastq
 
 No, your reads are not ok.
@@ -201,7 +201,7 @@ To view this record:
 
 If nothing is wrong:
 
-```bash
+```
 amro single my.fastq
 
 Yes, your reads are ok.
@@ -214,7 +214,6 @@ Some rules are optional, but all rules are enabled by default to be as strict as
 For paired and interleaved reads, amro also checks the mates match and will flag singletons.
 
 ```json
-amro rules --json
 {
   "rules": [
     {
